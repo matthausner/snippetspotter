@@ -1,7 +1,7 @@
 <?php
 require 'vendor/autoload.php';
 
-class SpotifyAPIFactory {
+class SpotifyAccessTokenFactory {
 
 	public function create($clientID, $clientSecret, $redirectURL) {
 		$session = new SpotifyWebAPI\Session(
@@ -10,11 +10,9 @@ class SpotifyAPIFactory {
     		$redirectURL
 		);
 
-		$api = new SpotifyWebAPI\SpotifyWebAPI();
-
 		if (isset($_GET['code'])) {
     		$session->requestAccessToken($_GET['code']);
-    		$api->setAccessToken($session->getAccessToken());
+    		return $session->getAccessToken();
 
 		} else {
     		$options = [
@@ -27,7 +25,6 @@ class SpotifyAPIFactory {
     		die();
     		'<br>';
 		}	
-			return $api;
 	}
 }
 ?>

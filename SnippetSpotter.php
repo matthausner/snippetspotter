@@ -18,11 +18,6 @@ public function spotSnippet($albumName, $albumTimestamp) {
 	$results = $api->search($albumName, 'album');
 	$album = $results->albums->items[0];
 	$tracks = $api->getAlbumTracks($album->id, ['limit' => 50]);
-
-	echo $album->name, '<br>';
-	echo 'Album-ID: '. $album->id, '<br>';
-	echo count($tracks->items). ' Tracks </b> <br>';
-
 	$spottedTrack = "Unknown Track";
 	$trackTimestamp = 0;
 
