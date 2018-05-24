@@ -8,7 +8,7 @@ class SnippetSpotter {
 * 		@param  int             $albumTimestamp 	album Timestamp in Milliseconds to be spotted
 +     * @return [string]          					Spotify API track object and timestamp in milliseconds of the track 
 +     */
-	public function spotSnippet($albumName, $albumTimestamp, $api) {
+	public function spotSnippet($api, $albumName, $albumTimestamp) {
 		$results = $api->search($albumName, 'album');
 		$album = $results->albums->items[0];
 		$tracks = $api->getAlbumTracks($album->id, ['limit' => 50]);
@@ -29,33 +29,28 @@ class SnippetSpotter {
 	}
 
 
-	public function embedSpotifyPlayer($hoerspiel, $verwendung, $accessToken) {
-			   $api = new SpotifyWebAPI\SpotifyWebAPI();
-			   $api->setAccessToken($accessToken);
-               $name = $hoerspiel->getName();
-               $beginn = explode(':', $verwendung->getBeginn());
-               $albumMinutes = $beginn[0];
-               $albumSeconds = $beginn[1];
+	public function embedSpotifyPlayer($accessToken, $albumName, $albumMinutesAndSeconds, $width = 300, $height = 80) {
+		$api = new SpotifyWebAPI\SpotifyWebAPI();
+		$api->setAccessToken($accessToken);
+        $beginn = explode(':', $albumMinutesAndSeconds);
+        $albumMinutes = $beginn[0];
+        $albumSeconds = $beginn[1];
 
-               $timeIntervalConverter = new TimeIntervalConverter();
-               $albumTimestamp = $timeIntervalConverter->convertToMilliseconds($albumMinutes, $albumSeconds);
-               $snippetInformation = $this->spotSnippet($name, $albumTimestamp, $api);
+        $timeIntervalConverter = new TimeIntervalConverter();
+        $albumTimestamp = $timeIntervalConverter->convertToMilliseconds($albumMinutes, $albumSeconds);
+        $snippetInformation = $this->spotSnippet($api, $albumName, $albumTimestamp);
 
-               $track = $snippetInformation[0];
-               $trackTimestamp = $snippetInformation[1];
-               $trackTimes = $timeIntervalConverter->convertToMinutesAndSeconds($trackTimestamp);
-               $trackMinutes = $trackTimes[0];
-               $trackSeconds = $trackTimes[1];
-               echo($track->name);
-               echo(", ");
-               $trackMinutes_padded = sprintf("%02d", $trackMinutes);
-               echo $num_padded; 
-               echo($trackMinutes_padded);
-               echo(":");
-               $trackSeconds_padded = sprintf("%02d", $trackSeconds);
-               echo($trackSeconds_padded);
-               echo("<br>");
-               echo('<iframe src="https://open.spotify.com/embed/track/' . $track->id . '" width="300" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>');
+        $track = $snippetInformation[0];
+        $trackTimestamp = $snippetInformation[1];
+        $trackTimes = $timeIntervalConverter->convertToMinutesAndSeconds($trackTimestamp);
+        $trackMinutes = $trackTimes[0];
+        $trackSeconds = $trackTimes[1];
+        $trackMinutes_padded = sprintf("%02d", $trackMinutes);
+        $trackSeconds_padded = sprintf("%02d", $trackSeconds);
+
+        echo($track->name . ", " . $trackMinutes_padded . ":" . $trackSeconds_padded . "<br>");
+               
+        echo('<iframe src="https://open.spotify.com/embed/track/' . $track->id . '" width="' . $width . '" height=' . $height . ' frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>');
         }
     } 
 ?>
