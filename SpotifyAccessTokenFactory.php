@@ -1,5 +1,5 @@
 <?php
-require 'vendor/autoload.php';
+require 'Core.php';
 
 class SpotifyAccessTokenFactory {
 
