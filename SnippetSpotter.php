@@ -49,9 +49,10 @@ class SnippetSpotter {
         $trackHours_padded = sprintf("%02d", $trackHours);
         $trackMinutes_padded = sprintf("%02d", $trackMinutes);
         $trackSeconds_padded = sprintf("%02d", $trackSeconds);
+        $spotifyURI = "spotify:track:" . $track->id . "#" . $trackMinutes . ":" . $trackSeconds;
 
-        echo($track->name . ", " . $trackMinutes_padded . ":" . $trackSeconds_padded . "<br>");   
-        echo('<iframe src="https://open.spotify.com/embed/track/' . $track->id . '" width="' . $width . '" height=' . $height . ' frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>');
+        echo("<a href = " . $spotifyURI . ">" . $track->name . ", " . $trackMinutes_padded . ":" . $trackSeconds_padded . "</a><br>");   
+        echo('<iframe src="https://open.spotify.com/embed/track/' . $track->id . "#" . $trackMinutes . ":" . $trackSeconds . '" width="' . $width . '" height=' . $height . ' frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>');
         }
     } 
 ?>
