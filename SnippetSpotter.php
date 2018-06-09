@@ -28,7 +28,7 @@ class SnippetSpotter {
 	}
 
 
-	public function embedSpotifyPlayer($accessToken, $albumName, $albumHoursMinutesAndSeconds, $width = 300, $height = 80) {
+	public function embedSpotifyPlayer($accessToken, $albumName, $albumHoursMinutesAndSeconds) {
 		$api = new SpotifyWebAPI\SpotifyWebAPI();
 		$api->setAccessToken($accessToken);
         $beginn = explode(':', $albumHoursMinutesAndSeconds);
@@ -52,7 +52,6 @@ class SnippetSpotter {
         $spotifyURI = "spotify:track:" . $track->id . "#" . $trackMinutes . ":" . $trackSeconds;
 
         echo("<a href = " . $spotifyURI . ">" . $track->name . ", " . $trackMinutes_padded . ":" . $trackSeconds_padded . "</a><br>");   
-        echo('<iframe src="https://open.spotify.com/embed/track/' . $track->id . "#" . $trackMinutes . ":" . $trackSeconds . '" width="' . $width . '" height=' . $height . ' frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>');
         }
     } 
 ?>
