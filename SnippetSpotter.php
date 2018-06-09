@@ -13,7 +13,7 @@ class SnippetSpotter {
 		$album = $results->albums->items[0];
 		$tracks = $api->getAlbumTracks($album->id, ['limit' => 50]);
 		$trackTimestamp = 0;
-
+        $accumulatedTrackDurations = 0;
 		foreach ($tracks->items as $track) {
 			$accumulatedTrackDurations += $track->duration_ms;
 	    	if ($accumulatedTrackDurations < $albumTimestamp) {
