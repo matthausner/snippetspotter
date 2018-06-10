@@ -50,8 +50,9 @@ class SnippetSpotter {
         $trackMinutes_padded = sprintf("%02d", $trackMinutes);
         $trackSeconds_padded = sprintf("%02d", $trackSeconds);
         $spotifyURI = "spotify:track:" . $track->id . "#" . $trackMinutes . ":" . $trackSeconds;
+        $spotifyTrackDescription = $track->name . ", " . $trackMinutes_padded . ":" . $trackSeconds_padded;
 
-        echo("<a href = " . $spotifyURI . ">" . $track->name . ", " . $trackMinutes_padded . ":" . $trackSeconds_padded . "</a><br>");   
+        echo("<a href=" . $spotifyURI . ">" . $spotifyTrackDescription . "</a><br>");   
         }
     } 
 ?>
