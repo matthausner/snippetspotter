@@ -44,7 +44,7 @@ class SnippetSpotter {
 *       @param  int             $albumTimestamp     album specific timestamp in milliseconds as integer
 +     * @return [string]                            Spotify Web API track object and track specific timestamp in milliseconds
 +     */ 
-    public function getSpotifyTrackAndTimestamp($api, $albumName, $albumTimestamp) {
+    private function getSpotifyTrackAndTimestamp($api, $albumName, $albumTimestamp) {
         $results = $api->search($albumName, 'album');
         $album = $results->albums->items[0];
         $tracks = $api->getAlbumTracks($album->id, ['limit' => 50]);
