@@ -2,33 +2,14 @@
 class SnippetSpotter {
 	
   /**
-+     * Returns a Spotify track object and a track-specific timestamp in milliseconds based on on album name and an album-specific timestamp
++     * Returns a Spotify uri linking to a position on a specific track and a human readable description, both based on the album name and the position in hours, minutes and seconds
 
-+     	@param  string          $albumName  		searchString containing the (partial) name of the album
-* 		@param  int             $albumTimestamp 	album Timestamp in Milliseconds to be spotted
-+     * @return [string]          					Spotify API track object and timestamp in milliseconds of the track 
++       @param  string          $albumName          searchString containing the name of the album
++     	@param  string          $albumName  		searchString containing the name of the album
+* 		@param  int             $albumTimestamp 	album specific position in hours, minutes and seconds as integer array
++     * @return [string]          					array consisting of the Spotify URI linking to the specified position and a human-readable description
 +     */
-	public function spotSnippet($api, $albumName, $albumTimestamp) {
-		$results = $api->search($albumName, 'album');
-		$album = $results->albums->items[0];
-		$tracks = $api->getAlbumTracks($album->id, ['limit' => 50]);
-		$trackTimestamp = 0;
-        $accumulatedTrackDurations = 0;
-		foreach ($tracks->items as $track) {
-			$accumulatedTrackDurations += $track->duration_ms;
-	    	if ($accumulatedTrackDurations < $albumTimestamp) {
-	    		continue; 
-	    	} else { 
-	    		$spottedTrack = $track;
-	    		$trackTimestamp =  $albumTimestamp + $track->duration_ms - $accumulatedTrackDurations;
-	    		break; 
-	    		} 
-			}
-		return [$spottedTrack, $trackTimestamp];
-	}
-
-
-	public function embedSpotifyPlayer($accessToken, $albumName, $albumHoursMinutesAndSeconds) {
+	public function getSpotifyLinkAndDescription($accessToken, $albumName, $albumHoursMinutesAndSeconds) {
 		$api = new SpotifyWebAPI\SpotifyWebAPI();
 		$api->setAccessToken($accessToken);
         $beginn = explode(':', $albumHoursMinutesAndSeconds);
@@ -38,7 +19,7 @@ class SnippetSpotter {
 
         $timeIntervalConverter = new TimeIntervalConverter();
         $albumTimestamp = $timeIntervalConverter->convertToMilliseconds($albumHours, $albumMinutes, $albumSeconds);
-        $snippetInformation = $this->spotSnippet($api, $albumName, $albumTimestamp);
+        $snippetInformation = $this->getSpotifyTrackAndTimestamp($api, $albumName, $albumTimestamp);
 
         $track = $snippetInformation[0];
         $trackTimestamp = $snippetInformation[1];
@@ -50,9 +31,36 @@ class SnippetSpotter {
         $trackMinutes_padded = sprintf("%02d", $trackMinutes);
         $trackSeconds_padded = sprintf("%02d", $trackSeconds);
         $spotifyURI = "spotify:track:" . $track->id . "#" . $trackMinutes . ":" . $trackSeconds;
-        $spotifyTrackDescription = $track->name . ", " . $trackMinutes_padded . ":" . $trackSeconds_padded;
+        $humanReadableDescription = $track->name . ", " . $trackMinutes_padded . ":" . $trackSeconds_padded;
 
-        echo("<a href=" . $spotifyURI . ">" . $spotifyTrackDescription . "</a><br>");   
-        }
-    } 
+        return [$spotifyURI, $humanReadableDescription];
+    }
+
+      /**
++     * Returns a Spotify track object and a track specific timestamp in milliseconds based on on album name and an album-specific timestamp
+
++       @param  spotifyWebAPI   $api                Spotify Web API object containing the user-specific access token 
++       @param  string          $albumName          searchString containing the name of the album
+*       @param  int             $albumTimestamp     album specific timestamp in milliseconds as integer
++     * @return [string]                            Spotify Web API track object and track specific timestamp in milliseconds
++     */ 
+    public function getSpotifyTrackAndTimestamp($api, $albumName, $albumTimestamp) {
+        $results = $api->search($albumName, 'album');
+        $album = $results->albums->items[0];
+        $tracks = $api->getAlbumTracks($album->id, ['limit' => 50]);
+        $trackTimestamp = 0;
+        $accumulatedTrackDurations = 0;
+        foreach ($tracks->items as $track) {
+            $accumulatedTrackDurations += $track->duration_ms;
+            if ($accumulatedTrackDurations < $albumTimestamp) {
+                continue; 
+            } else { 
+                $spottedTrack = $track;
+                $trackTimestamp =  $albumTimestamp + $track->duration_ms - $accumulatedTrackDurations;
+                break; 
+                } 
+            }
+        return [$spottedTrack, $trackTimestamp];
+    }
+}
 ?>
