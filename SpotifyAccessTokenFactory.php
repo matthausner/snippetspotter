@@ -3,7 +3,7 @@ require 'Core.php';
 
 class SpotifyAccessTokenFactory {
 
-	public function create($clientID, $clientSecret, $redirectURL) {
+	public function createWithAuthorizationCodeFlow($clientID, $clientSecret, $redirectURL) {
 		$session = new SpotifyWebAPI\Session(
     		$clientID,
     		$clientSecret,
@@ -23,8 +23,17 @@ class SpotifyAccessTokenFactory {
 
     		header('Location: ' . $session->getAuthorizeUrl($options));
     		die();
-    		'<br>';
 		}	
 	}
+
+    public function createWithClientCredentialsFlow($clientID, $clientSecret) {
+        $session = new SpotifyWebAPI\Session(
+            $clientID,
+            $clientSecret
+        );
+
+        $session->requestCredentialsToken();
+        return $session->getAccessToken();
+    }
 }
 ?>
