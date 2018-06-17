@@ -48,7 +48,9 @@ in your application, import the necessary classes:
 
 # Run Unit Tests
 
-    in the snippetspotter folder, run
+   in the snippetspotter folder, run
     
-    ```./phpunit --bootstrap Core.php <name of the test class>```, e.g.
-    ```./phpunit --bootstrap Core.php TimeIntervalConverterTest``` 
+    ./phpunit --bootstrap Core.php <name of the test class> 
+e.g.
+
+    ./phpunit --bootstrap Core.php TimeIntervalConverterTest
