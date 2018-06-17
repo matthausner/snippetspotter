@@ -46,3 +46,9 @@ in your application, import the necessary classes:
 	* the result is an array of strings containing a tracktime-specific Spotify Unique Resource Identifier (URI) and a human-readable description
 	* the URI can be used to link to the track on Spotify, the description as a link text or an alternative text for an image link
 
+# Run Unit Tests
+
+    in the snippetspotter folder, run
+    
+    ```./phpunit --bootstrap Core.php <name of the test class>```, e.g.
+    ```./phpunit --bootstrap Core.php TimeIntervalConverterTest``` 
