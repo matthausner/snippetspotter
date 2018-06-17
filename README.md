@@ -33,10 +33,12 @@ in your application, import the necessary classes:
 * generate a user-specific Spotify access token based on the id and secret:
 
 	* create a new instance of SpotifyAccessTokenFactory and assign it to a variable: ```$factory = new SpotifyAccessTokenFactory();```
-	* call ```$factory->create($clientID, $clientSecret, $redirectURL); ``` 
+	* if you want to generate the access token using the Client Credentials Flow, call ```$factory->createWithClientCredentialsFlow($clientID, $clientSecret); ``` 
+
+	* if you want to generate the access token using the Autorization Code Flow, call ```$factory->createWithAuthorizationCodeFlow($clientID, $clientSecret, $redirectURL); ``` 
 	* the $redirectUrl should be the URL of the page where the create method is called
-	* after a short amount of time (e.g. 1 second) redirect the user to the previous page: ```header("refresh:1;url=" . $previous);```
 	* store the result e.g. in an additional column in the 'user' table of your database 
+	* after a short amount of time (e.g. 1 second) redirect the user to the previous page: ```header("refresh:1;url=" . $previous);```
 
 * generate a tracktime-specific URI and description:
 
