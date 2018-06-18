@@ -46,7 +46,8 @@ class SnippetSpotter {
 +     */ 
     private function getSpotifyTrackAndTimestamp($api, $albumName, $albumTimestamp) {
         $results = $api->search($albumName, 'album');
-        $album = $results->albums->items[0];
+        $items = $results->albums->items;
+        $album = reset($items);
         $tracks = $api->getAlbumTracks($album->id, ['limit' => 50]);
         $trackTimestamp = 0;
         $accumulatedTrackDurations = 0;
