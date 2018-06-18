@@ -48,7 +48,12 @@ class SnippetSpotter {
         $results = $api->search($albumName, 'album');
         $items = $results->albums->items;
         $album = reset($items);
-        $tracks = $api->getAlbumTracks($album->id, ['limit' => 50]);
+        $albumObject = (Object)$album;
+        $id = "";
+        if(isset($albumObject->id)) {
+            $id = $albumObject->id;
+        }
+        $tracks = $api->getAlbumTracks($id, ['limit' => 50]);
         $trackTimestamp = 0;
         $accumulatedTrackDurations = 0;
         foreach ($tracks->items as $track) {
