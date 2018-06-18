@@ -1,14 +1,14 @@
 <?php
 class SnippetSpotter {
 	
-  /**
-+     * Returns a Spotify uri linking to a position on a specific track and a human readable description, both based on the album name and the position in hours, minutes and seconds
+    /*
+    Returns a Spotify uri linking to a position on a specific track and a human readable description, both based on the album name and the position in hours, minutes and seconds
 
-+       @param  string          $albumName          searchString containing the name of the album
-+     	@param  string          $albumName  		searchString containing the name of the album
-* 		@param  int             $albumTimestamp 	album specific position in hours, minutes and seconds as integer array
-+     * @return [string]          					array consisting of the Spotify URI linking to the specified position and a human-readable description
-+     */
+    @param  string          $albumName          searchString containing the name of the album
+    @param  string          $albumName  		searchString containing the name of the album
+ 	@param  int             $albumTimestamp 	album specific position in hours, minutes and seconds as integer array
+    @return [string]          					array consisting of the Spotify URI linking to the specified position and a human-readable description
+    */
 	public function getSpotifyLinkAndDescription($accessToken, $albumName, $albumHoursMinutesAndSeconds) {
 		$api = new SpotifyWebAPI\SpotifyWebAPI();
 		$api->setAccessToken($accessToken);
@@ -36,14 +36,14 @@ class SnippetSpotter {
         return [$spotifyURI, $humanReadableDescription];
     }
 
-      /**
-+     * Returns a Spotify track object and a track specific timestamp in milliseconds based on on album name and an album-specific timestamp
+    /*
+    Returns a Spotify track object and a track specific timestamp in milliseconds based on on album name and an album-specific timestamp
 
-+       @param  spotifyWebAPI   $api                Spotify Web API object containing the user-specific access token 
-+       @param  string          $albumName          searchString containing the name of the album
-*       @param  int             $albumTimestamp     album specific timestamp in milliseconds as integer
-+     * @return [string]                            Spotify Web API track object and track specific timestamp in milliseconds
-+     */ 
+    @param  spotifyWebAPI   $api                Spotify Web API object containing the user-specific access token 
+    @param  string          $albumName          searchString containing the name of the album
+    @param  int             $albumTimestamp     album specific timestamp in milliseconds as integer
+    @return [string]                            Spotify Web API track object and track specific timestamp in milliseconds
+    */ 
     private function getSpotifyTrackAndTimestamp($api, $albumName, $albumTimestamp) {
         $results = $api->search($albumName, 'album');
         $items = $results->albums->items;
