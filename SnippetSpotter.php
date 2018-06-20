@@ -58,6 +58,7 @@ class SnippetSpotter {
         $accumulatedTrackDurations = 0;
         foreach ($tracks->items as $track) {
             $accumulatedTrackDurations += $track->duration_ms;
+            $spottedTrack = $track;
             if ($accumulatedTrackDurations < $albumTimestamp) {
                 continue; 
             } else { 
