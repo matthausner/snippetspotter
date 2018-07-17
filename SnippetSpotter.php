@@ -36,6 +36,30 @@ class SnippetSpotter {
         return [$spotifyURI, $humanReadableDescription];
     }
 
+    public function getAlbumSpecificTime($accessToken, $albumName, $trackNumber, $trackHoursMinutesAndSeconds) {
+		$api = new SpotifyWebAPI\SpotifyWebAPI();
+		$api->setAccessToken($accessToken);
+        $beginn = explode(':', $trackHoursMinutesAndSeconds);
+        $albumHours = $beginn[0];
+        $albumMinutes = $beginn[1];
+        $albumSeconds = $beginn[2];
+
+        $timeIntervalConverter = new TimeIntervalConverter();
+        $trackTimestamp = $timeIntervalConverter->convertToMilliseconds($albumHours, $albumMinutes, $albumSeconds);
+        $albumTimestamp = $this->getAlbumTimestamp($api, $albumName, $trackNumber, $trackTimestamp);
+
+        $albumTime = $timeIntervalConverter->convertToHoursMinutesAndSeconds($albumTimestamp);
+        $albumHours = $albumTime[0];
+        $albumMinutes = $albumTime[1];
+        $albumSeconds = $albumTime[2];
+        $albumHours_padded = sprintf("%02d", $albumHours);
+        $albumMinutes_padded = sprintf("%02d", $albumMinutes);
+        $albumSeconds_padded = sprintf("%02d", $albumSeconds);
+        $albumSpecificTime = $albumHours_padded . ":" . $albumMinutes_padded . ":" . $albumSeconds_padded;
+
+        return $albumSpecificTime;
+    }
+
     /*
     Returns a Spotify track object and a track specific timestamp in milliseconds based on on album name and an album-specific timestamp
 
@@ -68,6 +92,24 @@ class SnippetSpotter {
                 } 
             }
         return [$spottedTrack, $trackTimestamp];
+    }
+
+    private static function getAlbumTimestamp($api, $albumName, $trackNumber, $trackTime) {
+        $results = $api->search($albumName, 'album');
+        $items = $results->albums->items;
+        $album = reset($items);
+        $albumObject = (Object)$album;
+        $id = "";
+        if(isset($albumObject->id)) {
+            $id = $albumObject->id;
+        }
+        $tracks = $api->getAlbumTracks($id, ['limit' => 50]);
+        $accumulatedTrackDurations = 0;
+        for ($x=1; $x<$trackNumber; $x++) {
+            $accumulatedTrackDurations += $tracks->items[$x]->duration_ms;
+        }
+        $albumTimestamp = $accumulatedTrackDurations + $trackTime;
+        return $albumTimestamp;
     }
 }
 ?>
