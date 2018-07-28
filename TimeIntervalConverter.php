@@ -35,5 +35,15 @@ class TimeIntervalConverter {
 			return 0;
 		}
 	}
+
+	public function convertFormattedTimeToMilliseconds($formattedTime) {
+		$beginn = explode(':', $formattedTime);
+        $hours = $beginn[0];
+        $minutes = $beginn[1];
+        $seconds = $beginn[2];
+
+        $timeIntervalConverter = new TimeIntervalConverter();
+        $trackTimestamp = $this->convertToMilliseconds($hours, $minutes, $seconds);
+	}
 }
 ?>
