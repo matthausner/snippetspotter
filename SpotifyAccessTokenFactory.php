@@ -17,7 +17,6 @@ class SpotifyAccessTokenFactory {
 		} else {
     		$options = [
         		'scope' => [
-            	'user-read-email',
         		],
     		];
 
