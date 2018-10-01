@@ -30,7 +30,12 @@ class SnippetSpotter {
         $trackHours_padded = sprintf("%02d", $trackHours);
         $trackMinutes_padded = sprintf("%02d", $trackMinutes);
         $trackSeconds_padded = sprintf("%02d", $trackSeconds);
-        $spotifyURI = "spotify:track:" . $track->id . "#" . $trackMinutes . ":" . $trackSeconds;
+        if ($this->isMobileDevice()) {
+            $spotifyURI = "https://open.spotify.com/track/" . $track->id . "#" . $trackMinutes . ":" . $trackSeconds;
+        }
+        else {
+            $spotifyURI = "spotify:track:" . $track->id . "#" . $trackMinutes . ":" . $trackSeconds;
+        }
         $humanReadableDescription = $track->name . ", " . $trackMinutes_padded . ":" . $trackSeconds_padded;
 
         return [$spotifyURI, $humanReadableDescription];
@@ -110,6 +115,24 @@ class SnippetSpotter {
         }
         $albumTimestamp = $accumulatedTrackDurations + $trackTime;
         return $albumTimestamp;
+    }
+
+    private static function isMobileDevice() {
+        $aMobileUA = array(
+            '/iphone/i' => 'iPhone', 
+            '/ipod/i' => 'iPod', 
+            '/ipad/i' => 'iPad', 
+            '/android/i' => 'Android', 
+            '/blackberry/i' => 'BlackBerry', 
+            '/webos/i' => 'Mobile'
+        );
+    
+        foreach($aMobileUA as $sMobileKey => $sMobileOS){
+            if(preg_match($sMobileKey, $_SERVER['HTTP_USER_AGENT'])){
+                return true;
+            }
+        }
+        return false;
     }
 }
 ?>
