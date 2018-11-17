@@ -4,10 +4,10 @@ class SnippetSpotter {
     /*
     Returns a Spotify uri linking to a position on a specific track and a human readable description, both based on the album name and the position in hours, minutes and seconds
 
-    @param  string          $albumName          searchString containing the name of the album
-    @param  string          $albumName  		searchString containing the name of the album
- 	@param  int             $albumTimestamp 	album specific position in hours, minutes and seconds as integer array
-    @return [string]          					array consisting of the Spotify URI linking to the specified position and a human-readable description
+    @param  string      $accessToken                 SpotifyAccessToken (to be obtained from SpotifyAccessTokenFactory)
+    @param  string      $albumName                   searchString containing the name of the album
+ 	@param  int         $albumHoursMinutesAndSeconds album specific position in hours, minutes and seconds as integer array
+    @return [string]          					     array (tuple) consisting of the Spotify URI linking to the specified position and a human-readable description
     */
 	public function getSpotifyLinkAndDescription($accessToken, $albumName, $albumHoursMinutesAndSeconds) {
 		$api = new SpotifyWebAPI\SpotifyWebAPI();
