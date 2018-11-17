@@ -26,10 +26,15 @@ class SnippetSpotter {
         $trackTimes = $timeIntervalConverter->convertToHoursMinutesAndSeconds($trackTimestamp);
         $trackHours = $trackTimes[0];
         $trackMinutes = $trackTimes[1];
-        $trackSeconds = $trackTimes[2];
+        if ($trackTimestamp != 0) {
+            $trackSeconds = $trackTimes[2];
+        } else {
+            $trackSeconds = $trackTimes[2] + 1;
+        }
         $trackHours_padded = sprintf("%02d", $trackHours);
         $trackMinutes_padded = sprintf("%02d", $trackMinutes);
         $trackSeconds_padded = sprintf("%02d", $trackSeconds);
+
         if ($this->isMobileDevice()) {
             $spotifyURI = "https://open.spotify.com/track/" . $track->id . "#" . $trackMinutes . ":" . $trackSeconds;
         }
