@@ -171,4 +171,20 @@ class TimeIntervalConverterTest extends PHPUnit\Framework\TestCase {
 
         $this->assertEquals($actual, $expected);
     }
+
+    public function testConvertFormattedTimeToMilliseconds() {
+        $timeIntervalConverter = new TimeIntervalConverter();
+        $actual = $timeIntervalConverter->convertFormattedTimeToMilliseconds("01:02:03");
+        $expected = 3723000;
+
+        $this->assertEquals($actual, $expected);
+    }
+
+    public function testConvertMillisecondsToFormattedTime() {
+        $timeIntervalConverter = new TimeIntervalConverter();
+        $actual = $timeIntervalConverter->convertMillisecondsToFormattedTime(3723000);
+        $expected = "1:2:3";
+
+        $this->assertEquals($actual, $expected);
+    }
 }
