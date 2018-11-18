@@ -4,7 +4,7 @@ class SnippetSpotter {
     /*
     Returns a Spotify uri linking to a position on a specific track and a human readable description, both based on the album name and the position in hours, minutes and seconds
 
-    @param  string      $accessToken                 SpotifyAccessToken (to be obtained from SpotifyAccessTokenFactory)
+    @param  string      $accessToken                 SpotifyAccessToken
     @param  string      $albumName                   searchString containing the name of the album
  	@param  int         $albumHoursMinutesAndSeconds album specific position in hours, minutes and seconds as integer array
     @return [string]          					     array (tuple) consisting of the Spotify URI linking to the specified position and a human-readable description
@@ -129,7 +129,8 @@ class SnippetSpotter {
             '/ipad/i' => 'iPad', 
             '/android/i' => 'Android', 
             '/blackberry/i' => 'BlackBerry', 
-            '/webos/i' => 'Mobile'
+            '/webos/i' => 'Mobile',
+            '/sailfish/i' => 'Sailfish'
         );
     
         foreach($aMobileUA as $sMobileKey => $sMobileOS){
