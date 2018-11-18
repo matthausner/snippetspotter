@@ -42,8 +42,12 @@ class TimeIntervalConverter {
         $minutes = $beginn[1];
         $seconds = $beginn[2];
 
-        $timeIntervalConverter = new TimeIntervalConverter();
-        $trackTimestamp = $this->convertToMilliseconds($hours, $minutes, $seconds);
+        return $this->convertToMilliseconds($hours, $minutes, $seconds);
+	}
+
+	public function convertMillisecondsToFormattedTime($milliseconds) {
+		$hoursMinutesAndSeconds = $this->convertToHoursMinutesAndSeconds($milliseconds);
+        return $hoursMinutesAndSeconds[0] . ":" . $hoursMinutesAndSeconds[1] . ":" . $hoursMinutesAndSeconds [2];
 	}
 }
 ?>
