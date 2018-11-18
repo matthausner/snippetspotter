@@ -12,13 +12,9 @@ class SnippetSpotter {
 	public function getSpotifyLinkAndDescription($accessToken, $albumName, $albumHoursMinutesAndSeconds) {
 		$api = new SpotifyWebAPI\SpotifyWebAPI();
 		$api->setAccessToken($accessToken);
-        $beginn = explode(':', $albumHoursMinutesAndSeconds);
-        $albumHours = $beginn[0];
-        $albumMinutes = $beginn[1];
-        $albumSeconds = $beginn[2];
 
         $timeIntervalConverter = new TimeIntervalConverter();
-        $albumTimestamp = $timeIntervalConverter->convertToMilliseconds($albumHours, $albumMinutes, $albumSeconds);
+        $albumTimestamp = $timeIntervalConverter->convertFormattedTimeToMilliseconds($albumHoursMinutesAndSeconds);
         $snippetInformation = $this->getSpotifyTrackAndTimestamp($api, $albumName, $albumTimestamp);
 
         $track = $snippetInformation[0];
@@ -31,7 +27,6 @@ class SnippetSpotter {
         } else {
             $trackSeconds = $trackTimes[2] + 1;
         }
-        $trackHours_padded = sprintf("%02d", $trackHours);
         $trackMinutes_padded = sprintf("%02d", $trackMinutes);
         $trackSeconds_padded = sprintf("%02d", $trackSeconds);
 
@@ -49,13 +44,9 @@ class SnippetSpotter {
     public function getAlbumSpecificTime($accessToken, $albumName, $trackNumber, $trackHoursMinutesAndSeconds) {
 		$api = new SpotifyWebAPI\SpotifyWebAPI();
 		$api->setAccessToken($accessToken);
-        $beginn = explode(':', $trackHoursMinutesAndSeconds);
-        $albumHours = $beginn[0];
-        $albumMinutes = $beginn[1];
-        $albumSeconds = $beginn[2];
 
         $timeIntervalConverter = new TimeIntervalConverter();
-        $trackTimestamp = $timeIntervalConverter->convertToMilliseconds($albumHours, $albumMinutes, $albumSeconds);
+        $trackTimestamp = $timeIntervalConverter->convertFormattedTimeToMilliseconds($trackHoursMinutesAndSeconds);
         $albumTimestamp = $this->getAlbumTimestamp($api, $albumName, $trackNumber, $trackTimestamp);
 
         $albumTime = $timeIntervalConverter->convertToHoursMinutesAndSeconds($albumTimestamp);
