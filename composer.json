@@ -1,5 +1,5 @@
 {
-    "name": "matthiashausner/snippet-spotter",
+    "name": "matthausner/snippetspotter",
     "description": "Library for locating audioplay snippets on Spotify based on an album-specific timestamp",
     "type": "library",
     "require": {
