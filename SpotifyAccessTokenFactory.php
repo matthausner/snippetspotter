@@ -1,5 +1,4 @@
 <?php
-require 'Core.php';
 
 class SpotifyAccessTokenFactory {
 
