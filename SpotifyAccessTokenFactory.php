@@ -18,8 +18,11 @@ class SpotifyAccessTokenFactory {
         		'scope' => [
         		],
     		];
-
-    		header('Location: ' . $session->getAuthorizeUrl($options));
+			$url = $session->getAuthorizeUrl($options);
+			echo 
+			'<script>
+				window.location.replace("'. $url .'");
+			</script>';
     		die();
 		}	
 	}
