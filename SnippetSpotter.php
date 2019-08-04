@@ -75,10 +75,10 @@ class SnippetSpotter {
         if(isset($albumObject->id)) {
             $id = $albumObject->id;
         }
-        $tracks = $api->getAlbumTracks($id, ['limit' => 50]);
+        $tracks = self::getAllAlbumTracks($api, $id);
         $trackTimestamp = 0;
         $accumulatedTrackDurations = 0;
-        foreach ($tracks->items as $track) {
+        foreach ($tracks as $track) {
             $accumulatedTrackDurations += $track->duration_ms;
             $spottedTrack = $track;
             if ($accumulatedTrackDurations < $albumTimestamp) {
@@ -101,13 +101,31 @@ class SnippetSpotter {
         if(isset($albumObject->id)) {
             $id = $albumObject->id;
         }
-        $tracks = $api->getAlbumTracks($id, ['limit' => 50]);
+        $tracks = self::getAllAlbumTracks($api, $id);
         $accumulatedTrackDurations = 0;
-        for ($x=0; $x<$trackNumber-1; $x++) {
-            $accumulatedTrackDurations += $tracks->items[$x]->duration_ms;
+        for ($x=0; $x<$trackNumber; $x++) {
+            $accumulatedTrackDurations += $tracks[$x]->duration_ms;
         }
         $albumTimestamp = $accumulatedTrackDurations + $trackTime;
         return $albumTimestamp;
+    }
+
+    private static function getAllAlbumTracks($api, $id) {
+        $offset = 0;
+        $tracks = [];
+        $hasNext = true;
+
+        do {
+            $response = $api->getAlbumTracks($id, [
+        'offset' => $offset,
+        ]);
+
+        $offset += 20;
+        $tracks = array_merge($tracks, $response->items);
+        $hasNext = $response->next;
+        } while ($hasNext);
+
+        return $tracks;
     }
 }
 ?>
