@@ -9,13 +9,13 @@ class SnippetSpotter {
  	@param  int         $albumHoursMinutesAndSeconds album specific position in hours, minutes and seconds as integer array
     @return [string]          					     array (tuple) consisting of the Spotify URI linking to the specified position and a human-readable description
     */
-	public function getSpotifyLinkAndDescription($accessToken, $albumName, $albumHoursMinutesAndSeconds) {
+	public function getSpotifyLinkAndDescription($accessToken, $album, $artist, $albumHoursMinutesAndSeconds) {
 		$api = new SpotifyWebAPI\SpotifyWebAPI();
 		$api->setAccessToken($accessToken);
 
         $timeIntervalConverter = new TimeIntervalConverter();
         $albumTimestamp = $timeIntervalConverter->convertFormattedTimeToMilliseconds($albumHoursMinutesAndSeconds);
-        $snippetInformation = $this->getSpotifyTrackAndTimestamp($api, $albumName, $albumTimestamp);
+        $snippetInformation = $this->getSpotifyTrackAndTimestamp($api, $album, $artist, $albumTimestamp);
 
         $track = $snippetInformation[0];
         $trackTimestamp = $snippetInformation[1];
@@ -36,13 +36,13 @@ class SnippetSpotter {
         return [$spotifyURI, $humanReadableDescription];
     }
 
-    public function getAlbumSpecificTime($accessToken, $albumName, $trackNumber, $trackHoursMinutesAndSeconds) {
+    public function getAlbumSpecificTime($accessToken, $album, $artist, $trackNumber, $trackHoursMinutesAndSeconds) {
 		$api = new SpotifyWebAPI\SpotifyWebAPI();
 		$api->setAccessToken($accessToken);
 
         $timeIntervalConverter = new TimeIntervalConverter();
         $trackTimestamp = $timeIntervalConverter->convertFormattedTimeToMilliseconds($trackHoursMinutesAndSeconds);
-        $albumTimestamp = $this->getAlbumTimestamp($api, $albumName, $trackNumber, $trackTimestamp);
+        $albumTimestamp = $this->getAlbumTimestamp($api, $album, $artist, $trackNumber, $trackTimestamp);
 
         $albumTime = $timeIntervalConverter->convertToHoursMinutesAndSeconds($albumTimestamp);
         $albumHours = $albumTime[0];
@@ -64,8 +64,9 @@ class SnippetSpotter {
     @param  int             $albumTimestamp     album specific timestamp in milliseconds as integer
     @return [string]                            Spotify Web API track object and track specific timestamp in milliseconds
     */ 
-    private function getSpotifyTrackAndTimestamp($api, $albumName, $albumTimestamp) {
-        $results = $api->search($albumName, 'album');
+    private function getSpotifyTrackAndTimestamp($api, $album, $artist, $albumTimestamp) {
+        
+		$results = $api->search('album:' . $album . ' artist:' . $artist, 'album');
         $items = $results->albums->items;
         $album = reset($items);
         $albumObject = (Object)$album;
@@ -90,8 +91,8 @@ class SnippetSpotter {
         return [$spottedTrack, $trackTimestamp];
     }
 
-    private static function getAlbumTimestamp($api, $albumName, $trackNumber, $trackTime) {
-        $results = $api->search($albumName, 'album');
+    private static function getAlbumTimestamp($api, $album, $artist, $trackNumber, $trackTime) {
+        $results = $api->search('album:' . $album . ' artist:' . $artist, 'album');
         $items = $results->albums->items;
         $album = reset($items);
         $albumObject = (Object)$album;
