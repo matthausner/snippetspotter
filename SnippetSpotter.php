@@ -102,7 +102,8 @@ class SnippetSpotter {
         }
         $tracks = self::getAllAlbumTracks($api, $id);
         $accumulatedTrackDurations = 0;
-        for ($x=0; $x<$trackNumber; $x++) {
+        $trackIndex = $trackNumber - 1;
+        for ($x=0; $x<$trackIndex; $x++) {
             $accumulatedTrackDurations += $tracks[$x]->duration_ms;
         }
         $albumTimestamp = $accumulatedTrackDurations + $trackTime;
