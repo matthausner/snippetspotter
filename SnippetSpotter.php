@@ -32,8 +32,9 @@ class SnippetSpotter {
 
         $spotifyURI = "https://open.spotify.com/track/" . $track->id . "#" . $trackMinutes . ":" . $trackSeconds;
         $humanReadableDescription = $track->name . ", " . $trackMinutes_padded . ":" . $trackSeconds_padded;
-
-        return [$spotifyURI, $humanReadableDescription];
+        
+        //return uri, description, track number, and milliseconds offset 
+        return [$spotifyURI, $humanReadableDescription, $snippetInformation[2], $snippetInformation[1]];
     }
 
     public function getAlbumSpecificTime($accessToken, $album, $artist, $trackNumber, $trackHoursMinutesAndSeconds) {
@@ -77,6 +78,7 @@ class SnippetSpotter {
         $tracks = self::getAllAlbumTracks($api, $id);
         $trackTimestamp = 0;
         $accumulatedTrackDurations = 0;
+        $ctr = 1;
         foreach ($tracks as $track) {
             $accumulatedTrackDurations += $track->duration_ms;
             $spottedTrack = $track;
@@ -86,9 +88,10 @@ class SnippetSpotter {
                 $spottedTrack = $track;
                 $trackTimestamp =  $albumTimestamp + $track->duration_ms - $accumulatedTrackDurations;
                 break; 
-                } 
             }
-        return [$spottedTrack, $trackTimestamp];
+            $ctr = $ctr + 1;
+        }
+        return [$spottedTrack, $trackTimestamp, $spottedTrack->track_number];
     }
 
     private static function getAlbumTimestamp($api, $album, $artist, $trackNumber, $trackTime) {
