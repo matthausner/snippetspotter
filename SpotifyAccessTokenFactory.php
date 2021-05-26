@@ -3,7 +3,7 @@ require 'Core.php';
 
 class SpotifyAccessTokenFactory {
 
-	public function createWithAuthorizationCodeFlow($clientID, $clientSecret, $redirectURL) {
+	public function createWithAuthorizationCodeFlow($clientID, $clientSecret, $redirectURL, $playlist = false) {
 		
 		$session = new SpotifyWebAPI\Session(
     		$clientID,
@@ -20,6 +20,7 @@ class SpotifyAccessTokenFactory {
 		} else {
     		$options = [
         		'scope' => [
+				'playlist-modify-public'
         		],
     		];
 			$url = $session->getAuthorizeUrl($options);
